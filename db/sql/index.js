@@ -3,7 +3,6 @@ const mysqlConfig = require('../../config.js');
 
 const connection = mysql.createConnection(mysqlConfig);
 
-// I ADDED THIS
 connection.connect((err) => {
   if (err) {
     console.error('error connecting: ' + err.stack);
@@ -12,4 +11,29 @@ connection.connect((err) => {
   console.log('connected as id ' + connection.threadId);
 });
 
-// DATABASE QUERIES HERE: (???)
+const saveMovie = (params, callback) => {
+  const queryStr = 'INSERT INTO favorited_movies (image_path, movie_title, release_date, average_rating) VALUES (?, ?, ?, ?)';
+  connection.query(queryStr, params, (error, results, fields) => {
+    if (error) {
+      throw error;
+    } else {
+      callback();
+    }
+  })
+}
+
+const deleteMovie = (params, callback) => {
+  const queryStr = 'DELETE FROM favorited_movies WHERE movie_title = ?';
+  connection.query(queryStr, params, (error, results, fields) => {
+    if (error) {
+      throw error;
+    } else {
+      callback();
+    }
+  })
+}
+
+module.exports = {
+  saveMovie,
+  deleteMovie
+};
