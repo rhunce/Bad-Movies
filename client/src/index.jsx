@@ -13,7 +13,7 @@ class App extends React.Component {
       favorites: [{deway: "favorites"}],
       showFaves: false,
     };
-    
+
     // you might have to do something important here!
   }
 
@@ -30,7 +30,7 @@ class App extends React.Component {
   }
 
   swapFavorites() {
-  //dont touch
+  //don't touch
     this.setState({
       showFaves: !this.state.showFaves
     });
@@ -39,8 +39,8 @@ class App extends React.Component {
   render () {
   	return (
       <div className="app">
-        <header className="navbar"><h1>Bad Movies</h1></header> 
-        
+        <header className="navbar"><h1>Bad Movies</h1></header>
+
         <div className="main">
           <Search swapFavorites={this.swapFavorites} showFaves={this.state.showFaves}/>
           <Movies movies={this.state.showFaves ? this.state.favorites : this.state.movies} showFaves={this.state.showFaves}/>
