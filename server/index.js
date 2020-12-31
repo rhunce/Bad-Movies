@@ -1,7 +1,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var request = require("request");
-var axios = require('axios'); // I IMPORTED THIS. SEEMS I CAN USE THIS IN PLACE OF REQUIRE.
+var axios = require('axios'); // I IMPORTED THIS. SEEMS I CAN USE THIS IN PLACE OF REQUEST.
 var { API_KEY } = require('../config.js'); // I IMPORTED THIS TO ACCESS API KEY.
 // api_key=3e2a09eb6f5524b4b00b190b8f767a0d
 var db = require('../db/sql/index.js');
@@ -14,12 +14,15 @@ var apiHelpers = require("./helpers/apiHelpers.js");
 
 //Middleware
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 // Due to express, when you load the page, it doesn't make a get request to '/', it simply serves up the dist folder
 app.use(express.static(__dirname + "/../client/dist"));
 
 // ROUTES: Takes requests from user (who operates in the browser) and routes request to TMDb API.
-
 // Result: Respond with JSON of all genres
 app.get("/genres", function(req, res) {
   axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`)
