@@ -12,7 +12,7 @@ connection.connect((err) => {
 });
 
 const saveMovie = (params, callback) => {
-  const queryStr = 'SELECT EXISTS(SELECT * FROM favorited_movies WHERE image_path = ?)';
+  const queryStr = 'SELECT EXISTS(SELECT * FROM favorited_movies WHERE poster_path = ?)';
   connection.query(queryStr, params, (error, results, fields) => {
     const movieAlreadyFavorited = Object.values(results[0])[0] === 1;
     if (error) {
@@ -20,12 +20,12 @@ const saveMovie = (params, callback) => {
     } else if (movieAlreadyFavorited) {
       return;
     } else {
-      const queryStr = 'INSERT INTO favorited_movies (image_path, movie_title, release_date, average_rating) VALUES (?, ?, ?, ?)';
+      const queryStr = 'INSERT INTO favorited_movies (poster_path, title, release_date, vote_average) VALUES (?, ?, ?, ?)';
       connection.query(queryStr, params, (error, results, fields) => {
         if (error) {
           throw error;
         } else {
-          callback();
+          callback(params);
         }
       })
     }
@@ -33,7 +33,7 @@ const saveMovie = (params, callback) => {
 }
 
 const deleteMovie = (params, callback) => {
-  const queryStr = 'DELETE FROM favorited_movies WHERE movie_title = ?';
+  const queryStr = 'DELETE FROM favorited_movies WHERE title = ?';
   connection.query(queryStr, params, (error, results, fields) => {
     if (error) {
       throw error;
@@ -43,7 +43,19 @@ const deleteMovie = (params, callback) => {
   })
 }
 
+const getFavorites = (callback) => {
+  const queryStr = 'SELECT * FROM favorited_movies';
+  connection.query(queryStr, (error, results, fields) => {
+    if (error) {
+      throw error;
+    } else {
+      callback(results);
+    }
+  })
+}
+
 module.exports = {
   saveMovie,
-  deleteMovie
+  deleteMovie,
+  getFavorites
 };

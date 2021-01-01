@@ -13,12 +13,11 @@ class App extends React.Component {
       favorites: [],
       showFaves: false
     };
-
-    // you might have to do something important here!
   }
 
   componentDidMount() {
-    this.getMovies('Comedy');
+    this.getMovies('Action');
+    this.populateFavorites();
   }
 
   getMovies(genre) {
@@ -28,11 +27,24 @@ class App extends React.Component {
       this.setState({
         movies: moviesList.data
       })
-      console.log('MOVIES IN STATE: ', this.state.movies);
+      console.log('MOVIES: ', this.state.movies);
     })
     .catch(err => {
       throw err;
     })
+  }
+
+  populateFavorites() {
+    axios.get('http://localhost:8000/favorites')
+    .then((favoritedMovieData) => {
+      this.setState({
+        favorites: favoritedMovieData.data
+      })
+      console.log('FAVORITED MOVIES: ', this.state.favorites);
+    })
+    .catch((err) => {
+      throw err;
+    });
   }
 
   // When a movie clicked, decides whether to save into favorites (if in main screen) or delete from favorites (if in favorites screen)
@@ -44,7 +56,7 @@ class App extends React.Component {
     }
   }
 
-  // If movie not already favorited (checks database), favorites it and puts in database.
+  // If movie not already favorited (checks database), favorites it by putting in database and then adding to this.state.favorites.
   saveMovie(e) {
     var neededInfo = e.currentTarget.getElementsByClassName('needed_info');
 
@@ -59,8 +71,14 @@ class App extends React.Component {
       release_date,
       vote_average
     })
+    .then((movieData) => {
+      var args = this.state.favorites;
+      this.setState({
+        favorites: [...args, movieData.data]
+      })
+    })
     .then(() => {
-      alert('Movie Favorited!');
+      console.log('FAVORITES: ', this.state.favorites);
     })
     .catch((err) => {
       throw err;
@@ -68,9 +86,26 @@ class App extends React.Component {
   }
 
   // If movie favorited (checks database), deletes it from database.
-  deleteMovie() {
-    // same as above but do something diff
-    console.log('DELETE MOVIE');
+  deleteMovie(e) {
+    var neededInfo = e.currentTarget.getElementsByClassName('needed_info');
+    var title = neededInfo[1].innerText;
+
+    axios.post('http://localhost:8000/delete', {
+      title
+    })
+    .then((movieData) => {
+      this.populateFavorites();
+    })
+    .catch((err) => {
+      throw err;
+    })
+  }
+
+  changeMovieCategory(e) {
+    e.preventDefault();
+    var categorySelected = document.getElementsByClassName("dropDownId")[0].value;
+    console.log('categorySelected: ', categorySelected);
+    this.getMovies(categorySelected);
   }
 
   swapFavorites() {
@@ -89,6 +124,7 @@ class App extends React.Component {
           <Search
             swapFavorites={this.swapFavorites.bind(this)}
             showFaves={this.state.showFaves}
+            changeMovieCategory={this.changeMovieCategory.bind(this)}
           />
           <Movies
             movies={this.state.showFaves ? this.state.favorites : this.state.movies}
