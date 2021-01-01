@@ -12,12 +12,22 @@ connection.connect((err) => {
 });
 
 const saveMovie = (params, callback) => {
-  const queryStr = 'INSERT INTO favorited_movies (image_path, movie_title, release_date, average_rating) VALUES (?, ?, ?, ?)';
+  const queryStr = 'SELECT EXISTS(SELECT * FROM favorited_movies WHERE image_path = ?)';
   connection.query(queryStr, params, (error, results, fields) => {
+    const movieAlreadyFavorited = Object.values(results[0])[0] === 1;
     if (error) {
       throw error;
+    } else if (movieAlreadyFavorited) {
+      return;
     } else {
-      callback();
+      const queryStr = 'INSERT INTO favorited_movies (image_path, movie_title, release_date, average_rating) VALUES (?, ?, ?, ?)';
+      connection.query(queryStr, params, (error, results, fields) => {
+        if (error) {
+          throw error;
+        } else {
+          callback();
+        }
+      })
     }
   })
 }
