@@ -28,37 +28,19 @@ class Search extends React.Component {
   render() {
     return (
       <div className="search">
-        <button onClick={() => {this.props.swapFavorites()}}>{this.props.showFaves ? "Show Results" : "Show Favorites"}</button>
+        <button className="sidebar" onClick={() => {this.props.swapFavorites()}}>{this.props.showFaves ? "Show Results" : "Show Favorites"}</button>
         <br/><br/>
 
-        {/* How can you tell which option has been selected from here? */}
         <form>
-          <select className ="dropDownId">
+          <select className="dropDownId sidebar">
             {this.state.genres.map((genreItem) => {
               return <option key={genreItem.id} value={genreItem.name}>{genreItem.name}</option>
             })}
           </select>
           <br/><br/>
-          <input className="SubmitButton" type="submit" name="SUBMITBUTTON" value="Submit" onClick={(e) => {this.props.changeMovieCategory(e)}}/>
+          <input id="submitBtn" className="sidebar" type="submit" name="SUBMITBUTTON" value="Submit" onClick={(e) => {this.props.changeMovieCategory(e)}}/>
         </form>
-
       </div>
-      // <div className="search">
-      //   <button onClick={() => {this.props.swapFavorites()}}>{this.props.showFaves ? "Show Results" : "Show Favorites"}</button>
-      //   <br/><br/>
-
-      //   {/* How can you tell which option has been selected from here? */}
-      //   <form>
-      //     <select className ="dropDownId">
-      //       {this.state.genres.map((genreItem) => {
-      //         return <option key={genreItem.id} value={genreItem.name}>{genreItem.name}</option>
-      //       })}
-      //     </select>
-      //     <br/><br/>
-      //     <input className="SubmitButton" type="submit" name="SUBMITBUTTON" value="Submit" onClick={(e) => {this.props.changeMovieCategory(e)}}/>
-      //   </form>
-
-      // </div>
     );
   }
 }

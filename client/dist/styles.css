@@ -36,7 +36,7 @@ html, body, #app {
 .main {
   flex-grow: 1;
   display: flex;
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 .search {
@@ -50,20 +50,30 @@ html, body, #app {
   font-size: 20px;
 }
 
-.search > button {
-  font-size: 20px;
+.sidebar {
+  font-size: 30px;
+  border: none;
   padding: 10px;
+  border-radius: 5px;
+  background-image: linear-gradient(#26313e, #38485c);
+  color: #fff;
 }
 
-.search > select {
+.dropDownId {
+  font-size: 15px;
+  padding: 5px;
+}
+
+#submitBtn {
   font-size: 20px;
-  padding: 10px;
+  width: 150px;
 }
 
 .movies {
   flex-basis:80%;
   display: flex;
   flex-wrap: wrap;
+
   margin:0;
   padding: 20px;
   overflow-y: scroll;
